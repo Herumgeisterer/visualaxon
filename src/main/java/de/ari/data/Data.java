@@ -11,6 +11,7 @@ import lombok.Singular;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -25,7 +26,6 @@ public class Data {
 
    @Singular
    private List<Aggregate> aggregates;
-   @Singular
-   private List<EventHandler> eventhandlers;
 
+   private List<Event> events = new ArrayList<>();
 }

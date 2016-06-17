@@ -10,6 +10,8 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Builder(toBuilder = true)
@@ -21,5 +23,7 @@ import lombok.experimental.FieldDefaults;
 public class Event {
 
    private String name;
+
+   private List<EventListener> eventListeners;
 
 }

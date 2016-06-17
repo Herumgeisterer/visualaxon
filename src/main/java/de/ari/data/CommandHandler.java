@@ -25,5 +25,5 @@ public class CommandHandler {
 
    private String command;
    @Singular
-   private List<Event> events;
+   private List<String> events;
 }
