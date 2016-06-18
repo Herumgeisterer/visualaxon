@@ -47,3 +47,5 @@ dist
 main.css
 .sass-cache
 main.css.map
+
+webapp/app/data

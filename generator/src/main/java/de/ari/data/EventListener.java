@@ -20,4 +20,5 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class EventListener {
    private String name;
+   private String type;
 }
