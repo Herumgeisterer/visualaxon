@@ -5,17 +5,7 @@
     "normalize-css": "~3.0.1",
     "jquery": "2.0.3",
     "modernizr": "~2.8.1",
-    "lodash": "3.10.1",
-    "backbone": "1.2.1",
-    "jointjs": "joint#^0.9.10"
+    "cytoscape": "^2.7.2"
   },
-  "devDependencies": {},
-  "resolutions": {
-    "backbone": "1.2.1"
-  },
-  "overrides": {
-    "backbone": {
-      "dependencies": []
-    }
-  }
+  "devDependencies": {}
 }

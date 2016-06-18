@@ -1,4 +1,4 @@
-package de.ari.data;
+package de.ari.json.cytoscape;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -10,8 +10,6 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
-
 @Getter
 @Setter
 @Builder(toBuilder = true)
@@ -20,10 +18,12 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class Event {
-
+public class Data {
+   private String id;
    private String name;
 
-   private List<EventListener> eventListeners;
+   private String parent;
 
+   private String source;
+   private String target;
 }

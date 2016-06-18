@@ -1,10 +1,12 @@
 package de.ari.parser;
 
 import de.ari.data.Aggregate;
+import de.ari.data.AxonData;
 import de.ari.data.CommandHandler;
-import de.ari.data.Data;
-import de.ari.data.Event;
+import de.ari.data.EventHandler;
 import de.ari.data.EventListener;
+import de.ari.json.JsonProvider;
+import de.ari.json.cytoscape.CytoscapeJsonProvider;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,9 +33,6 @@ import org.jboss.forge.roaster.model.source.ParameterSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 @SuppressWarnings("unused")
 @Component
 public class Generator {
@@ -48,8 +47,9 @@ public class Generator {
 
    Logger LOGGER = Logger.getLogger(Generator.class);
 
-   private Data.DataBuilder dataBuilder = Data.builder();
-   private List<Event> events = new ArrayList<>();
+   private AxonData.AxonDataBuilder dataBuilder = AxonData.builder();
+   private List<EventHandler> eventHandlers = new ArrayList<>();
+   private JsonProvider jsonProvider;
 
    @PostConstruct
    public void init() throws IOException {
@@ -86,18 +86,11 @@ public class Generator {
             dataBuilder.aggregate(aggregate);
          }
 
-         final List<MethodSource<JavaClassSource>> methods = myClass.getMethods();
-
-         for (MethodSource<JavaClassSource> method : methods) {
-            for (AnnotationSource<JavaClassSource> annotation : method.getAnnotations()) {
-               if (isEventHandlingMethod(annotation.getName())) {
-                  addEventListener(myClass.getName(), method);
-               }
-            }
+         final EventListener eventListener = getEventListener(myClass);
+         if (eventListener != null) {
+            dataBuilder.eventListener(eventListener);
          }
       });
-
-      dataBuilder.events(events);
 
       File outPutFile = new File(OUTPUT_PATH + "/output.json");
 
@@ -108,10 +101,37 @@ public class Generator {
          }
       }
 
+      jsonProvider = new CytoscapeJsonProvider();
+
       try (Writer writer = new FileWriter(outPutFile)) {
-         Gson gson = new GsonBuilder().create();
-         gson.toJson(dataBuilder.build(), writer);
+         final String json = jsonProvider.getJson(dataBuilder.build());
+         writer.write(json);
+         writer.close();
       }
+   }
+
+   private EventListener getEventListener(final JavaClassSource klass) {
+
+      final List<MethodSource<JavaClassSource>> methods = klass.getMethods();
+
+      final List<EventHandler> eventHandlers = new ArrayList<>();
+
+      for (MethodSource<JavaClassSource> method : methods) {
+         for (AnnotationSource<JavaClassSource> annotation : method.getAnnotations()) {
+            if (isEventHandlingMethod(annotation.getName())) {
+               eventHandlers.add(getEventHandler(method));
+            }
+         }
+      }
+
+      if (eventHandlers.isEmpty()) {
+         return null;
+      }
+
+      return EventListener.builder()
+            .name(klass.getName())
+            .eventHandlers(eventHandlers)
+            .build();
    }
 
    private boolean isEventHandlingMethod(final String annotationName) {
@@ -121,7 +141,7 @@ public class Generator {
       return isEventHandler || isEventSourcingHandler || isSagaEventHandler;
    }
 
-   private void addEventListener(final String listenerName, final MethodSource<JavaClassSource> method) {
+   private EventHandler getEventHandler(final MethodSource<JavaClassSource> method) {
       final String eventTypeName = method.getParameters()
             .get(0)
             .getType()
@@ -148,34 +168,10 @@ public class Generator {
          }
       }
 
-      final EventListener eventListener = EventListener.builder()
-            .name(listenerName)
+      return EventHandler.builder()
+            .eventType(eventTypeName)
             .type(listenerType)
             .build();
-
-      if (eventListenerExists(eventTypeName)) {
-         events.stream()
-               .filter(event -> event.getName()
-                     .equals(eventTypeName))
-               .forEach(event -> event.getEventListeners()
-                     .add(eventListener));
-      } else {
-         events.add(Event.builder()
-               .name(eventTypeName)
-               .eventListeners(new ArrayList<EventListener>() {{
-                  add(eventListener);
-               }})
-               .build());
-      }
-   }
-
-   private boolean eventListenerExists(final String eventTypeName) {
-      final long count = events.stream()
-            .filter(event -> event.getName()
-                  .equals(eventTypeName))
-            .count();
-
-      return count != 0;
    }
 
    private Aggregate getAggregate(final JavaClassSource myClass) {

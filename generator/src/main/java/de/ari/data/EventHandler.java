@@ -7,12 +7,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.Singular;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
@@ -22,10 +18,8 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class Data {
+public class EventHandler {
 
-   @Singular
-   private List<Aggregate> aggregates;
-
-   private List<Event> events = new ArrayList<>();
+   private String eventType;
+   private String type;
 }
