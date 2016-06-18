@@ -39,3 +39,11 @@ Icon
 /out/
 
 target
+
+
+node_modules
+bower_components
+dist
+main.css
+.sass-cache
+main.css.map
