@@ -1,4 +1,4 @@
-package de.ari.data;
+package de.axonvisualizer.generator.data;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -21,8 +21,9 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class Aggregate {
-   private String name;
+public class CommandHandler {
+
+   private String command;
    @Singular
-   private List<CommandHandler> commandHandlers;
+   private List<String> events;
 }

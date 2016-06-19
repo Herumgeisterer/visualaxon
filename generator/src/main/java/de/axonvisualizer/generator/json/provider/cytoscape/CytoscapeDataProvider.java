@@ -1,23 +1,23 @@
-package de.ari.json.cytoscape;
+package de.axonvisualizer.generator.json.provider.cytoscape;
 
-import de.ari.data.Aggregate;
-import de.ari.data.AxonData;
-import de.ari.data.CommandHandler;
-import de.ari.data.EventHandler;
-import de.ari.data.EventListener;
-import de.ari.json.JsonProvider;
+import de.axonvisualizer.generator.data.Aggregate;
+import de.axonvisualizer.generator.data.AxonData;
+import de.axonvisualizer.generator.data.CommandHandler;
+import de.axonvisualizer.generator.data.EventHandler;
+import de.axonvisualizer.generator.data.EventListener;
+import de.axonvisualizer.generator.json.provider.DataProvider;
+import de.axonvisualizer.generator.json.provider.cytoscape.data.Data;
+import de.axonvisualizer.generator.json.provider.cytoscape.data.Node;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gson.Gson;
-
-public class CytoscapeJsonProvider implements JsonProvider {
+public class CytoscapeDataProvider implements DataProvider {
 
    private List<Node> nodes = new ArrayList<>();
 
    @Override
-   public String getJson(final AxonData axonData) {
+   public Object getData(final AxonData axonData) {
 
       final List<Aggregate> aggregates = axonData.getAggregates();
 
@@ -73,7 +73,7 @@ public class CytoscapeJsonProvider implements JsonProvider {
          }
       }
 
-      return new Gson().toJson(nodes);
+      return nodes;
    }
 
    private boolean hasEventHandler(final String event, final AxonData axonData) {

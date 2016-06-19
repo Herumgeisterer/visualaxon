@@ -1,4 +1,4 @@
-package de.ari.data;
+package de.axonvisualizer.generator.data;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -7,7 +7,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.Singular;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
@@ -21,11 +20,8 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class AxonData {
+public class EventListener {
+   private String name;
 
-   @Singular
-   private List<Aggregate> aggregates;
-
-   @Singular
-   private List<EventListener> eventListeners;
+   private List<EventHandler> eventHandlers;
 }

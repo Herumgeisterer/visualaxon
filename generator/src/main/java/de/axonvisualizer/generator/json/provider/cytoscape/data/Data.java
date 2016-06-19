@@ -1,4 +1,4 @@
-package de.ari.json.cytoscape;
+package de.axonvisualizer.generator.json.provider.cytoscape.data;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -18,7 +18,12 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class Node {
+public class Data {
+   private String id;
+   private String name;
 
-   private Data data;
+   private String parent;
+
+   private String source;
+   private String target;
 }

@@ -1,4 +1,4 @@
-package de.ari.data;
+package de.axonvisualizer.generator.data;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
