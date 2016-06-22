@@ -8,7 +8,7 @@
    <packaging>pom</packaging>
 
    <name>axonvisualizer</name>
-   <description>Visualizer Commandhandler and Eventhandler for Axonframework</description>
+   <description>Visualize Commandhandler and Eventhandler for Axonframework</description>
 
    <modules>
       <module>generator</module>
