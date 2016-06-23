@@ -34,22 +34,25 @@ public class CytoscapeDataProvider implements DataProvider {
          for (CommandHandler commandHandler : commandHandlers) {
             nodes.add(Node.builder()
                   .data(Data.builder()
-                        .id(commandHandler.getCommand())
+                        .id(aggregate.getName() + ":" + commandHandler.getCommand())
                         .name(commandHandler.getCommand())
                         .parent(aggregate.getName())
                         .build())
                   .build());
 
             for (String event : commandHandler.getEvents()) {
-               if (!hasEventHandler(event, axonData)) {
+               final List<String> eventHandlerIds = getEventHandlerIds(event, axonData);
+               if (eventHandlerIds.isEmpty()) {
                   continue;
                }
-               nodes.add(Node.builder()
-                     .data(Data.builder()
-                           .source(commandHandler.getCommand())
-                           .target(event)
-                           .build())
-                     .build());
+               for (String eventHandlerId : eventHandlerIds) {
+                  nodes.add(Node.builder()
+                        .data(Data.builder()
+                              .source(aggregate.getName() + ":" + commandHandler.getCommand())
+                              .target(eventHandlerId)
+                              .build())
+                        .build());
+               }
             }
          }
       }
@@ -65,7 +68,7 @@ public class CytoscapeDataProvider implements DataProvider {
          for (EventHandler eventHandler : listener.getEventHandlers()) {
             nodes.add(Node.builder()
                   .data(Data.builder()
-                        .id(eventHandler.getEventType())
+                        .id(listener.getName() + ":" + eventHandler.getEventType())
                         .name(eventHandler.getEventType())
                         .parent(listener.getName())
                         .build())
@@ -76,16 +79,18 @@ public class CytoscapeDataProvider implements DataProvider {
       return nodes;
    }
 
-   private boolean hasEventHandler(final String event, final AxonData axonData) {
+   private List<String> getEventHandlerIds(final String event, final AxonData axonData) {
+      final List<String> eventHandlerIds = new ArrayList<>();
+
       for (EventListener eventListener : axonData.getEventListeners()) {
          for (EventHandler eventHandler : eventListener.getEventHandlers()) {
             if (eventHandler.getEventType()
                   .equals(event)) {
-               return true;
+               eventHandlerIds.add(eventListener.getName() + ":" + eventHandler.getEventType());
             }
          }
       }
 
-      return false;
+      return eventHandlerIds;
    }
 }

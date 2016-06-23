@@ -2,6 +2,7 @@
 // endbower
 @import "3rdparty/cytoscape-navigator.css";
 @import "../bower_components/cytoscape-panzoom/cytoscape.js-panzoom.css";
+@import "spinner.scss";
 
 body {
   background: #fafafa;
@@ -18,9 +19,4 @@ body {
   left: 0;
   top: 0;
   z-index: 999;
-}
-
-h1 {
-  opacity: 0.5;
-  font-size: 1em;
 }

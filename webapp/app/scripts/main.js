@@ -1,49 +1,44 @@
 $.ajax("data/output.json")
     .done(function (data) {
+        $('#diagram').hide();
+
         var cy = cytoscape({
             container: $('#diagram'),
-            style: [
-                {
-                    selector: 'node',
-                    css: {
-                        'content': 'data(name)',
-                        'text-valign': 'center',
-                        'text-halign': 'center'
-                    }
-                },
-                {
-                    selector: '$node > node',
-                    css: {
-                        'padding-top': '10px',
-                        'padding-left': '10px',
-                        'padding-bottom': '10px',
-                        'padding-right': '10px',
-                        'text-valign': 'top',
-                        'text-halign': 'center',
-                        'background-color': '#bbb'
-                    }
-                },
-                {
-                    selector: ':parent',
-                    style: {
-                        'background-opacity': 0.333
-                    }
-                },
-                {
-                    selector: 'edge',
-                    style: {
-                        'width': 3,
-                        'line-color': '#ad1a66'
-                    }
-                },
-                {
-                    selector: '.center-center',
-                    style: {
-                        'text-valign': 'center',
-                        'text-halign': 'center'
-                    }
-                }
-            ],
+            hideEdgesOnViewport: false,
+            hideLabelsOnViewport: false,
+
+            style: cytoscape.stylesheet()
+                .selector('node')
+                .css({
+                    'content': 'data(name)',
+                    'text-valign': 'center',
+                    'color': 'white',
+                    'text-outline-width': 2,
+                    'backgrund-color': '#999',
+                    'text-outline-color': '#999'
+                })
+                .selector('$node > node')
+                .css({
+                    'padding-top': '10px',
+                    'padding-left': '10px',
+                    'padding-bottom': '10px',
+                    'padding-right': '10px',
+                    'text-valign': 'top',
+                    'text-halign': 'center',
+                    'background-color': '#bbb'
+                })
+                .selector(':parent')
+                .css({
+                    'background-opacity': 0.333
+                })
+                .selector('edge')
+                .css({
+                    'curve-style': 'bezier',
+                    'target-arrow-shape': 'triangle',
+                    'target-arrow-color': '#999',
+                    'line-color': '#999',
+                    'width': 1
+                }),
             elements: data
         });
 
@@ -80,20 +75,22 @@ $.ajax("data/output.json")
             name: 'cola',
             animate: true, // whether to show the layout as it's running
             refresh: 1, // number of ticks per frame; higher is faster but more jerky
-            maxSimulationTime: 8000, // max length in ms to run the layout
+            maxSimulationTime: 4000, // max length in ms to run the layout
             ungrabifyWhileSimulating: false, // so you can't drag nodes during layout
-            fit: false, // on every layout reposition of nodes, fit the viewport
+            fit: true, // on every layout reposition of nodes, fit the viewport
             padding: 30, // padding around the simulation
             boundingBox: undefined, // constrain layout bounds; { x1, y1, x2, y2 } or { x1, y1, w, h }
 
             // layout event callbacks
             ready: function () {
+                $('#diagram').show();
+                $('.spinner').hide();
             }, // on layoutready
             stop: function () {
             }, // on layoutstop
 
             // positioning options
-            randomize: true, // use random node positions at beginning of layout
+            randomize: false, // use random node positions at beginning of layout
             avoidOverlap: true, // if true, prevents overlap of node bounding boxes
             handleDisconnected: true, // if true, avoids disconnected components from overlapping
             nodeSpacing: function (node) {
@@ -114,7 +111,7 @@ $.ajax("data/output.json")
             allConstIter: undefined, // initial layout iterations with all constraints including non-overlap
 
             // infinite layout options
-            infinite: true // overrides all other options for a forces-all-the-time mode
+            infinite: false // overrides all other options for a forces-all-the-time mode
         });
 
         cy.ready(function () {
@@ -125,5 +122,4 @@ $.ajax("data/output.json")
                 dblClickDelay: 200
             });
         });
-
     });
