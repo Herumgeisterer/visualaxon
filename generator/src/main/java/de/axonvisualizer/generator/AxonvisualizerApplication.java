@@ -1,11 +1,12 @@
 package de.axonvisualizer.generator;
 
+import de.axonvisualizer.generator.init.guice.StandaloneModule;
 import de.axonvisualizer.generator.generator.Generator;
-import de.axonvisualizer.generator.json.provider.cytoscape.CytoscapeDataProvider;
-import de.axonvisualizer.generator.json.writer.gson.GsonWriter;
-import de.axonvisualizer.generator.logging.Log4JLogger;
 
 import java.io.File;
+
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 
 public class AxonvisualizerApplication {
 
@@ -13,7 +14,9 @@ public class AxonvisualizerApplication {
    public static final String OUTPUT_PATH = "/Development/axonvisualizer/webapp/app/data/output.json";
 
    public static void main(String[] args) {
-      final Generator generator = new Generator(new CytoscapeDataProvider(), new GsonWriter(), new Log4JLogger());
+      Injector injector = Guice.createInjector(new StandaloneModule());
+
+      final Generator generator = injector.getInstance(Generator.class);
       generator.generateFile(new File(INPUT_ROOT), new File(OUTPUT_PATH));
    }
 }

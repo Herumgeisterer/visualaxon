@@ -1,9 +1,7 @@
 package de.axonvisualizer.generator;
 
 import de.axonvisualizer.generator.generator.Generator;
-import de.axonvisualizer.generator.json.provider.cytoscape.CytoscapeDataProvider;
-import de.axonvisualizer.generator.json.writer.gson.GsonWriter;
-import de.axonvisualizer.generator.logging.MavenPluginLogger;
+import de.axonvisualizer.generator.init.guice.MavenPluginModule;
 
 import java.io.File;
 
@@ -12,6 +10,9 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
+
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 
 @Mojo(name = "generate", requiresDependencyCollection = ResolutionScope.COMPILE)
 public class GenerateGoal extends AbstractMojo {
@@ -23,7 +24,10 @@ public class GenerateGoal extends AbstractMojo {
    private File outputFilePath;
 
    public void execute() throws MojoExecutionException {
-      Generator generator = new Generator(new CytoscapeDataProvider(), new GsonWriter(), new MavenPluginLogger(getLog()));
+      Injector injector = Guice.createInjector(new MavenPluginModule(getLog()));
+
+      final Generator generator = injector.getInstance(Generator.class);
+
       generator.generateFile(rootDir, outputFilePath);
    }
 }
