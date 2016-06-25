@@ -32,11 +32,11 @@ public class AxonSpotter {
    private AxonData.AxonDataBuilder dataBuilder = AxonData.builder();
    private AxonUtil axonUtil = new AxonUtil();
 
-   public AxonData traverseFiles(final String inputRoot) {
+   public AxonData traverseFiles(final File inputRoot) {
 
       final Stream<Path> walk;
       try {
-         walk = Files.walk(new File(inputRoot).toPath())
+         walk = Files.walk(inputRoot.toPath())
                .filter(p -> p.getFileName()
                      .toString()
                      .endsWith(".java"));

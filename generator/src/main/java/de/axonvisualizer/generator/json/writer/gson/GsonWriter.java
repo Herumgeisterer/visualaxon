@@ -13,18 +13,16 @@ import com.google.gson.Gson;
 public class GsonWriter implements JsonWriter {
 
    @Override
-   public void write(final String outputFilePath, final Object object) {
+   public void write(final File outputFilePath, final Object object) {
 
-      File outPutFile = new File(outputFilePath);
-
-      if (outPutFile.exists()) {
-         final boolean deleted = outPutFile.delete();
+      if (outputFilePath.exists()) {
+         final boolean deleted = outputFilePath.delete();
          if (!deleted) {
             throw new AxonVisualizerException("Could not delete old file " + outputFilePath + ". File could be inconsistent state.");
          }
       }
       try {
-         try (Writer writer = new FileWriter(new File(outputFilePath))) {
+         try (Writer writer = new FileWriter(outputFilePath)) {
             Gson gson = new Gson();
             gson.toJson(object, writer);
          }

@@ -4,6 +4,8 @@ import de.axonvisualizer.generator.data.AxonData;
 import de.axonvisualizer.generator.json.provider.DataProvider;
 import de.axonvisualizer.generator.json.writer.JsonWriter;
 
+import java.io.File;
+
 public class Generator {
 
    private DataProvider dataProvider;
@@ -14,7 +16,7 @@ public class Generator {
       this.jsonWriter = jsonWriter;
    }
 
-   public void generateFile(final String inputRoot, final String outputPath) {
+   public void generateFile(final File inputRoot, final File outputPath) {
       final AxonData axonData = new AxonSpotter().traverseFiles(inputRoot);
 
       jsonWriter.write(outputPath, dataProvider.getData(axonData));
