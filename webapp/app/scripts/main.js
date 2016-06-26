@@ -1,47 +1,5 @@
 $.ajax("data/output.json")
     .done(function (data) {
-        $('#diagram').hide();
-
-        var cy = cytoscape({
-            container: $('#diagram'),
-            hideEdgesOnViewport: false,
-            hideLabelsOnViewport: false,
-
-            style: cytoscape.stylesheet()
-                .selector('node')
-                .css({
-                    'content': 'data(name)',
-                    'text-valign': 'center',
-                    'color': 'white',
-                    'text-outline-width': 2,
-                    'backgrund-color': '#999',
-                    'text-outline-color': '#999'
-                })
-                .selector('$node > node')
-                .css({
-                    'padding-top': '10px',
-                    'padding-left': '10px',
-                    'padding-bottom': '10px',
-                    'padding-right': '10px',
-                    'text-valign': 'top',
-                    'text-halign': 'center',
-                    'background-color': '#bbb'
-                })
-                .selector(':parent')
-                .css({
-                    'background-opacity': 0.333
-                })
-                .selector('edge')
-                .css({
-                    'curve-style': 'bezier',
-                    'target-arrow-shape': 'triangle',
-                    'target-arrow-color': '#999',
-                    'line-color': '#999',
-                    'width': 1
-                }),
-            elements: data
-        });
-
         // the default values of each option are outlined below:
         var defaults = {
             zoomFactor: 0.05, // zoom factor per zoom tick
@@ -84,7 +42,6 @@ $.ajax("data/output.json")
             // layout event callbacks
             ready: function () {
                 $('#diagram').show();
-                $('.spinner').hide();
             }, // on layoutready
             stop: function () {
             }, // on layoutstop

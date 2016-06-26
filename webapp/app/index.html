@@ -3,16 +3,19 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>webapp</title>
+        <title>Axonvisualizer</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <!-- Place favicon.ico and apple-touch-icon(s) in the root directory -->
 
+        <!--Import Google Icon Font-->
+        <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
         <!-- build:css styles/vendor.css -->
         <!-- bower:css -->
         <link rel="stylesheet" href="bower_components/normalize-css/normalize.css"/>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+        <link rel="stylesheet" href="bower_components/Materialize/bin/materialize.css"/>
         <!-- endbower -->
         <!-- endbuild -->
 
@@ -30,11 +33,91 @@
         <![endif]-->
 
 
-        <div id="diagram"></div>
+        <nav class="blue-grey lighten-1" role="navigation">
+        </nav>
+        <div class="section no-pad-bot" id="index-banner">
+            <div class="container">
+                <br><br>
+                <h1 class="header center orange-text">Axonvisualizer</h1>
+                <div class="row center">
+                    <h5 class="header col s12 light">A maven plugin which helps you visualize your Axonframework based application</h5>
+                </div>
+                <div class="row center">
+                    <a id="upload-button" class="btn-large waves-effect waves-light blue-grey">Load json</a>
+                </div>
+                <br><br>
 
-        <svg class="spinner" width="65px" height="65px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
-            <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
-        </svg>
+            </div>
+        </div>
+
+
+        <div class="container">
+            <div class="section">
+
+                <!--   Icon Section   -->
+                <div class="row">
+                    <div class="col s12 m4">
+                        <div class="icon-block">
+                            <h2 class="center light-blue-text"><i class="material-icons">code</i></h2>
+                            <h5 class="center"><a href="http://www.axonframework.org/" target="_blank">Axonframework</a></h5>
+
+                            <p class="light">The axonframework helps you build applications based on the CQRS principle and eventsourcing pattern</p>
+                        </div>
+                    </div>
+
+                    <div class="col s12 m4">
+                        <div class="icon-block">
+                            <h2 class="center light-blue-text"><i class="material-icons">picture_in_picture</i></h2>
+                            <h5 class="center">Visualize</h5>
+
+                            <p class="light">Want to know which command leads to which event?
+                                             How many eventhandler are handling this event and where they are?
+                                             This tool allows you to keep track of these things</p>
+                        </div>
+                    </div>
+
+                    <div class="col s12 m4">
+                        <div class="icon-block">
+                            <h2 class="center light-blue-text"><i class="material-icons">info_outline</i></h2>
+                            <h5 class="center">???</h5>
+
+                            <p class="light"></p>
+                        </div>
+                    </div>
+
+                    <div class="col s12">
+                        <div class="icon-block">
+                            <h2 class="center light-blue-text"><i class="material-icons">info</i></h2>
+                            <h5 class="center">Getting started</h5>
+
+                            <p class="center">Include the maven plugin in your project</p>
+                            <p class="center">run mvn axonviszualizer:generate</p>
+                            <p class="center">Come back to this page and load the generated json file</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <br><br>
+
+            <div class="section">
+
+            </div>
+        </div>
+
+        <footer class="page-footer blue-grey lighten-2">
+            <div class="container">
+                <div class="row">
+                    <div class="col l6 s12">
+                    </div>
+                </div>
+            </div>
+            <div class="footer-copyright">
+            </div>
+        </footer>
+
+
+        <!--<div id="diagram"></div>-->
 
         <!-- build:js scripts/vendor.js -->
         <!-- bower:js -->
@@ -43,6 +126,7 @@
         <script src="bower_components/cytoscape-panzoom/cytoscape-panzoom.js"></script>
         <script src="bower_components/webcola/WebCola/cola.js"></script>
         <script src="bower_components/cytoscape-cola/cytoscape-cola.js"></script>
+        <script src="bower_components/Materialize/bin/materialize.js"></script>
         <!-- endbower -->
         <!-- endbuild -->
 
