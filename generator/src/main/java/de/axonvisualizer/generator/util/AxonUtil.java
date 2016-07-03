@@ -21,7 +21,9 @@ public class AxonUtil {
    public static final String COMMAND_HANDLER = "CommandHandler";
 
    private static final Pattern BUILDER_PATTERN = Pattern.compile("(?<=apply\\()(.*)(?=.builder)");
-   private static final Pattern CONSTRUCTOR_PATTERN = Pattern.compile("(?<=apply\\(new )(.*)(?=\\(.*\\))");
+   private static final Pattern CONSTRUCTOR_PATTERN = Pattern.compile("(?<=apply\\(new )(.*?)(?=\\()");
+   private static final Pattern VARIABLE_PATTERN = Pattern.compile("(?<=apply\\()[^\\s()]+(?=[^()]*\\))");
+   private static final String EVENT_TYPE_FOR_VARIABLE_PATTERN = "(.*?)(?= %1s)";
 
    public boolean isEventHandlingMethod(final String annotationName) {
       final boolean isEventHandler = annotationName.equals(EVENT_HANDLER_ANNOTATION_NAME);
@@ -70,34 +72,44 @@ public class AxonUtil {
             .collect(Collectors.toList());
 
       final List<String> lombokEvents = lines.stream()
-            .filter(this::isLombok)
-            .map(s -> getEvent(s, BUILDER_PATTERN))
+            .filter(s -> testMatch(s, BUILDER_PATTERN))
+            .map(s -> getMatch(s, BUILDER_PATTERN))
             .collect(Collectors.toList());
 
       final List<String> constuctorEvents = lines.stream()
-            .filter(this::isConstructor)
-            .map(s -> getEvent(s, CONSTRUCTOR_PATTERN))
+            .filter(s -> testMatch(s, CONSTRUCTOR_PATTERN))
+            .map(s -> getMatch(s, CONSTRUCTOR_PATTERN))
             .collect(Collectors.toList());
 
-      return Stream.concat(lombokEvents.stream(), constuctorEvents.stream())
+      final List<String> variableEvents = lines.stream()
+            .filter(s -> testMatch(s, VARIABLE_PATTERN))
+            .map(s -> getMatch(s, VARIABLE_PATTERN))
+            .map(s -> getEventForVariable(s, body))
+            .collect(Collectors.toList());
+
+      return Stream.concat(lombokEvents.stream(), Stream.concat(constuctorEvents.stream(), variableEvents.stream()))
             .collect(Collectors.toList());
    }
 
-   private String getEvent(final String input, final Pattern regexPattern) {
+   private String getMatch(final String input, final Pattern regexPattern) {
       Matcher m = regexPattern.matcher(input);
       if (m.find()) {
-         return m.group(1);
+         return m.group(0);
       }
       return null;
    }
 
-   private boolean isConstructor(final String input) {
-      return CONSTRUCTOR_PATTERN.asPredicate()
-            .test(input);
+   private String getEventForVariable(final String variableName, final String input) {
+      final Pattern pattern = Pattern.compile(String.format(EVENT_TYPE_FOR_VARIABLE_PATTERN, variableName));
+      final Matcher matcher = pattern.matcher(input);
+      if (matcher.find()) {
+         return matcher.group(1);
+      }
+      return null;
    }
 
-   private boolean isLombok(final String input) {
-      return BUILDER_PATTERN.asPredicate()
+   private boolean testMatch(final String input, final Pattern pattern) {
+      return pattern.asPredicate()
             .test(input);
    }
 }

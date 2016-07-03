@@ -51,15 +51,40 @@ public class AxonUtilTests extends TestData {
    }
 
    @Test
+   public void shouldReturnEventType() throws Exception {
+      final List<String> appliedEvents = axonUtil.getAppliedEvents(CONSTRUCTOR_EVENT_WITH_METHOD_CALLS);
+      assertEquals(appliedEvents.size(), 1);
+      assertEquals(appliedEvents.get(0), "SomeEvent");
+   }
+
+   @Test
    public void shouldFindSingleAppliedEvents() throws Exception {
       final List<String> appliedEvents = axonUtil.getAppliedEvents(BODY_WITH_SINGLE_APPLIED_EVENT);
       assertEquals(appliedEvents.size(), 1);
+   }
+
+   // TODO find event variable that is declared final
+   @Test
+   public void shouldFindEventTypeForVariable() throws Exception {
+      final List<String> appliedEvents = axonUtil.getAppliedEvents(BODY_WITH_SINGLE_APPLIED_EVENT_AS_VARIABLE);
+      assertEquals(appliedEvents.size(), 1);
+      assertEquals(appliedEvents.get(0), "SomeEvent");
+   }
+
+   @Test
+   public void shouldFindEventTypeForMultipleAppliedEventsAsVariables() throws Exception {
+      final List<String> appliedEvents = axonUtil.getAppliedEvents(BODY_WITH_MULTIPLE_APPLIED_EVENTS_AS_VARIABLE);
+      assertEquals(appliedEvents.size(), 2);
+      assertTrue(appliedEvents.contains("Event"));
+      assertTrue(appliedEvents.contains("SomeOtherEvent"));
    }
 
    @Test
    public void shouldFindMultipleAppliedEvents() throws Exception {
       final List<String> appliedEvents = axonUtil.getAppliedEvents(BODY_WITH_MULTIPLE_APPLIED_EVENTS);
       assertEquals(appliedEvents.size(), 2);
+      assertTrue(appliedEvents.contains("EventWithParameter"));
+      assertTrue(appliedEvents.contains("OtherEvent"));
    }
 
    @Test

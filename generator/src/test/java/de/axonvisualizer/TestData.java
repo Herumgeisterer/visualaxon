@@ -16,6 +16,20 @@ public abstract class TestData {
          + "// some comments"
          + "apply(new UserSignedUpEvent());";
 
+   protected final String BODY_WITH_SINGLE_APPLIED_EVENT_AS_VARIABLE = "String some = \"other code\";"
+         + "// some comments \n"
+         + "final Some random = new Some();\n"
+         + "final SomeEvent event = new SomeEvent();\n"
+         + "apply(event);\n";
+
+   protected final String BODY_WITH_MULTIPLE_APPLIED_EVENTS_AS_VARIABLE = "String some = \"other code\";"
+         + "// some comments \n"
+         + "Some random = new Some();\n"
+         + "final Event event = new Event();\n"
+         + "final SomeOtherEvent someOtherEvent = new SomeOtherEvent();\n"
+         + "apply(someOtherEvent);\n"
+         + "apply(event);\n";
+
    protected final String BODY_WITH_MULTIPLE_APPLIED_EVENTS = "String some = \"other code\";\n"
          + "// some comments\n"
          + "apply(new EventWithParameter(value1, value2));\n"
@@ -28,4 +42,7 @@ public abstract class TestData {
    protected final String NOT_APPLIED_LOMBOK = "String some = \"other code\";\n"
          + "// some comments\n"
          + "SomeObject object = SomeObject.builder().build();";
+
+   protected final String CONSTRUCTOR_EVENT_WITH_METHOD_CALLS = "apply(new SomeEvent(command.getSomeValue()));";
+
 }
