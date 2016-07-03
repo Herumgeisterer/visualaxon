@@ -27,10 +27,18 @@ import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
 import org.jboss.forge.roaster.model.source.ParameterSource;
 
+import com.google.inject.Inject;
+
 public class AxonSpotter {
 
+   private final AxonUtil axonUtil;
+
+   @Inject
+   public AxonSpotter(final AxonUtil axonUtil) {
+      this.axonUtil = axonUtil;
+   }
+
    private AxonData.AxonDataBuilder dataBuilder = AxonData.builder();
-   private AxonUtil axonUtil = new AxonUtil();
 
    public AxonData traverseFiles(final File inputRoot) {
 

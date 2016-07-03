@@ -10,8 +10,8 @@ import com.google.inject.Injector;
 
 public class AxonvisualizerApplication {
 
-   public static final String INPUT_ROOT = "/Development/wee/wee-backend/";
-   public static final String OUTPUT_PATH = "/Development/axonvisualizer/webapp/app/data/output.json";
+   public static final String INPUT_ROOT = "/Development/qyotta/panozone/";
+   public static final String OUTPUT_PATH = "/Development/axonvisualizer/webapp/src/data/output.json";
 
    public static void main(String[] args) {
       Injector injector = Guice.createInjector(new StandaloneModule());

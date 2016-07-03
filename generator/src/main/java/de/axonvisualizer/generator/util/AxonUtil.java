@@ -1,9 +1,12 @@
 package de.axonvisualizer.generator.util;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import org.apache.commons.lang3.StringUtils;
 import org.jboss.forge.roaster.model.source.AnnotationSource;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
@@ -16,7 +19,9 @@ public class AxonUtil {
    public static final String EVENT_SOURCING_HANDLER_NAME = "EventSourcingHandler";
    public static final String ABSTRACT_ANNOTATED_ENTITY = "AbstractAnnotatedEntity";
    public static final String COMMAND_HANDLER = "CommandHandler";
-   public static final String APPLY = "apply";
+
+   private static final Pattern BUILDER_PATTERN = Pattern.compile("(?<=apply\\()(.*)(?=.builder)");
+   private static final Pattern CONSTRUCTOR_PATTERN = Pattern.compile("(?<=apply\\(new )(.*)(?=\\(.*\\))");
 
    public boolean isEventHandlingMethod(final String annotationName) {
       final boolean isEventHandler = annotationName.equals(EVENT_HANDLER_ANNOTATION_NAME);
@@ -60,30 +65,39 @@ public class AxonUtil {
    }
 
    public List<String> getAppliedEvents(final String body) {
-      List<String> appliedEvents = new ArrayList<>();
 
-      final int appliedEventsCount = getAppliedEventsCount(body);
+      final List<String> lines = Arrays.stream(body.split(System.getProperty("line.separator")))
+            .collect(Collectors.toList());
 
-      int applySearchStart = 0;
-      int builderSearchStart = 0;
+      final List<String> lombokEvents = lines.stream()
+            .filter(this::isLombok)
+            .map(s -> getEvent(s, BUILDER_PATTERN))
+            .collect(Collectors.toList());
 
-      for (int i = 0; i < appliedEventsCount; i++) {
-         final int applyIndex = body.indexOf("apply(", applySearchStart);
-         final int builderIndex = body.indexOf(".builder", builderSearchStart);
+      final List<String> constuctorEvents = lines.stream()
+            .filter(this::isConstructor)
+            .map(s -> getEvent(s, CONSTRUCTOR_PATTERN))
+            .collect(Collectors.toList());
 
-         final int eventTypeNameStart = applyIndex + "apply(".length();
-         final int builderOccurenceEnd = builderIndex + ".builder".length();
-
-         final String event = body.substring(eventTypeNameStart, builderIndex);
-         appliedEvents.add(event);
-
-         applySearchStart = eventTypeNameStart;
-         builderSearchStart = builderOccurenceEnd;
-      }
-      return appliedEvents;
+      return Stream.concat(lombokEvents.stream(), constuctorEvents.stream())
+            .collect(Collectors.toList());
    }
 
-   private int getAppliedEventsCount(final String body) {
-      return StringUtils.countMatches(body, APPLY);
+   private String getEvent(final String input, final Pattern regexPattern) {
+      Matcher m = regexPattern.matcher(input);
+      if (m.find()) {
+         return m.group(1);
+      }
+      return null;
+   }
+
+   private boolean isConstructor(final String input) {
+      return CONSTRUCTOR_PATTERN.asPredicate()
+            .test(input);
+   }
+
+   private boolean isLombok(final String input) {
+      return BUILDER_PATTERN.asPredicate()
+            .test(input);
    }
 }

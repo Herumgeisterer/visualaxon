@@ -48,4 +48,4 @@ main.css
 .sass-cache
 main.css.map
 
-webapp/**/data
+webapp/**/data/output.json

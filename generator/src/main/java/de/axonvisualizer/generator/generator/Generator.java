@@ -14,16 +14,18 @@ public class Generator {
    private DataProvider dataProvider;
    private JsonWriter jsonWriter;
    private Logger logger;
+   private AxonSpotter axonSpotter;
 
    @Inject
-   public Generator(final DataProvider dataProvider, final JsonWriter jsonWriter, final Logger logger) {
+   public Generator(final DataProvider dataProvider, final JsonWriter jsonWriter, final Logger logger, final AxonSpotter axonSpotter) {
       this.dataProvider = dataProvider;
       this.jsonWriter = jsonWriter;
       this.logger = logger;
+      this.axonSpotter = axonSpotter;
    }
 
    public void generateFile(final File inputRoot, final File outputPath) {
-      final AxonData axonData = new AxonSpotter().traverseFiles(inputRoot);
+      final AxonData axonData = axonSpotter.traverseFiles(inputRoot);
 
       jsonWriter.write(outputPath, dataProvider.getData(axonData));
 
