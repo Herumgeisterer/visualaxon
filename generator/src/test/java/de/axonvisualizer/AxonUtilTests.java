@@ -1,6 +1,5 @@
 package de.axonvisualizer;
 
-import de.axonvisualizer.generator.init.guice.StandaloneModule;
 import de.axonvisualizer.generator.util.AxonUtil;
 
 import static org.junit.Assert.assertEquals;
@@ -20,7 +19,7 @@ import com.carlosbecker.guice.GuiceTestRunner;
 import com.google.inject.Inject;
 
 @RunWith(GuiceTestRunner.class)
-@GuiceModules(StandaloneModule.class)
+@GuiceModules(TestModule.class)
 public class AxonUtilTests extends TestData {
 
    @Inject

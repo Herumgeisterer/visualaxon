@@ -1,23 +1,16 @@
 package de.axonvisualizer.generator.generator;
 
-import de.axonvisualizer.generator.data.Aggregate;
-import de.axonvisualizer.generator.data.AxonData;
-import de.axonvisualizer.generator.data.CommandHandler;
-import de.axonvisualizer.generator.data.EventHandler;
-import de.axonvisualizer.generator.data.EventListener;
+import de.axonvisualizer.generator.event.AggregateSpotted;
+import de.axonvisualizer.generator.event.CommandHandlerSpotted;
+import de.axonvisualizer.generator.event.EventHandlerSpotted;
+import de.axonvisualizer.generator.event.EventListenerSpotted;
 import de.axonvisualizer.generator.exception.AxonVisualizerException;
 import de.axonvisualizer.generator.util.AxonUtil;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.JavaUnit;
@@ -27,32 +20,24 @@ import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
 import org.jboss.forge.roaster.model.source.ParameterSource;
 
+import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 
 public class AxonSpotter {
 
    private final AxonUtil axonUtil;
+   private final EventBus eventBus;
+   private final JavaFileTraverser javaFileTraverser;
 
    @Inject
-   public AxonSpotter(final AxonUtil axonUtil) {
+   public AxonSpotter(final AxonUtil axonUtil, final EventBus eventBus, final JavaFileTraverser javaFileTraverser) {
       this.axonUtil = axonUtil;
+      this.eventBus = eventBus;
+      this.javaFileTraverser = javaFileTraverser;
    }
 
-   private AxonData.AxonDataBuilder dataBuilder = AxonData.builder();
-
-   public AxonData traverseFiles(final File inputRoot) {
-
-      final Stream<Path> walk;
-      try {
-         walk = Files.walk(inputRoot.toPath())
-               .filter(p -> p.getFileName()
-                     .toString()
-                     .endsWith(".java"));
-      } catch (IOException e) {
-         throw new AxonVisualizerException(e.getMessage(), e.getCause());
-      }
-
-      walk.forEach(path -> {
+   public void traverseFiles() {
+      javaFileTraverser.traverse(path -> {
          FileInputStream fileInputStream = null;
          try {
             fileInputStream = new FileInputStream(path.toFile());
@@ -74,44 +59,67 @@ public class AxonSpotter {
          }
 
          if (axonUtil.isAggreagte(myClass)) {
-            final Aggregate aggregate = getAggregate(myClass);
-            dataBuilder.aggregate(aggregate);
+            getAggregate(myClass);
          }
 
-         final EventListener eventListener = getEventListener(myClass);
-         if (eventListener != null) {
-            dataBuilder.eventListener(eventListener);
-         }
+         getEventListener(myClass);
       });
 
-      return dataBuilder.build();
+      javaFileTraverser.traverse(path -> {
+         FileInputStream fileInputStream = null;
+         try {
+            fileInputStream = new FileInputStream(path.toFile());
+         } catch (FileNotFoundException e) {
+            throw new AxonVisualizerException(e.getMessage(), e.getCause());
+         }
+
+         JavaUnit unit = Roaster.parseUnit(fileInputStream);
+
+         if (!unit.getGoverningType()
+               .isClass()) {
+            return;
+         }
+
+         JavaClassSource myClass = unit.getGoverningType();
+
+         if (myClass.isAbstract()) {
+            return;
+         }
+
+         getEventListener(myClass);
+      });
    }
 
-   private EventListener getEventListener(final JavaClassSource klass) {
+   private void getEventListener(final JavaClassSource klass) {
 
       final List<MethodSource<JavaClassSource>> methods = klass.getMethods();
-
-      final List<EventHandler> eventHandlers = new ArrayList<>();
+      final List<MethodSource<JavaClassSource>> eventHandlerMethods = new ArrayList<>();
 
       for (MethodSource<JavaClassSource> method : methods) {
-         eventHandlers.addAll(method.getAnnotations()
+         final boolean isEventHandlingMethod = method.getAnnotations()
                .stream()
-               .filter(annotation -> axonUtil.isEventHandlingMethod(annotation.getName()))
-               .map(annotation -> getEventHandler(method))
-               .collect(Collectors.toList()));
+               .anyMatch(javaClassSourceAnnotationSource -> axonUtil.isEventHandlingMethod(javaClassSourceAnnotationSource.getName()));
+
+         if (isEventHandlingMethod) {
+            eventHandlerMethods.add(method);
+         }
       }
 
-      if (eventHandlers.isEmpty()) {
-         return null;
+      if (eventHandlerMethods.isEmpty()) {
+         return;
       }
 
-      return EventListener.builder()
+      eventBus.post(EventListenerSpotted.builder()
             .name(klass.getName())
-            .eventHandlers(eventHandlers)
-            .build();
+            .build());
+
+      for (MethodSource<JavaClassSource> method : eventHandlerMethods) {
+         getEventHandler(method, klass.getName());
+      }
+
    }
 
-   private EventHandler getEventHandler(final MethodSource<JavaClassSource> method) {
+   private void getEventHandler(final MethodSource<JavaClassSource> method, final String listenerName) {
       final String eventTypeName = method.getParameters()
             .get(0)
             .getType()
@@ -127,17 +135,19 @@ public class AxonSpotter {
          throw new AxonVisualizerException(method.getName() + " is not a valid Axon EventHandler");
       }
 
-      return EventHandler.builder()
-            .eventType(eventTypeName)
+      eventBus.post(EventHandlerSpotted.builder()
+            .eventName(eventTypeName)
             .type(eventHandlerType)
-            .build();
+            .listener(listenerName)
+            .build());
    }
 
-   private Aggregate getAggregate(final JavaClassSource myClass) {
+   private void getAggregate(final JavaClassSource myClass) {
       final String aggregateName = myClass.getName();
 
-      final Aggregate.AggregateBuilder aggregateBuilder = Aggregate.builder()
-            .name(aggregateName);
+      eventBus.post(AggregateSpotted.builder()
+            .name(aggregateName)
+            .build());
 
       final List<MethodSource<JavaClassSource>> methods = myClass.getMethods();
 
@@ -151,17 +161,14 @@ public class AxonSpotter {
 
          final Type<JavaClassSource> commandType = command.getType();
 
-         final CommandHandler.CommandHandlerBuilder commandHandlerBuilder = CommandHandler.builder()
-               .command(commandType.getName());
-
          final List<String> appliedEvents = axonUtil.getAppliedEvents(method.getBody());
 
-         final CommandHandler commandHandler = commandHandlerBuilder.events(appliedEvents)
-               .build();
+         eventBus.post(CommandHandlerSpotted.builder()
+               .command(commandType.getName())
+               .aggregate(aggregateName)
+               .events(appliedEvents)
+               .build());
 
-         aggregateBuilder.commandHandler(commandHandler);
       }
-
-      return aggregateBuilder.build();
    }
 }

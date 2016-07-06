@@ -1,33 +1,30 @@
 package de.axonvisualizer.generator.generator;
 
-import de.axonvisualizer.generator.data.AxonData;
 import de.axonvisualizer.generator.json.provider.DataProvider;
-import de.axonvisualizer.generator.json.writer.JsonWriter;
 import de.axonvisualizer.generator.logging.Logger;
 
-import java.io.File;
-
+import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 
 public class Generator {
 
-   private DataProvider dataProvider;
-   private JsonWriter jsonWriter;
    private Logger logger;
    private AxonSpotter axonSpotter;
+   private EventBus eventBus;
+   private DataProvider listener;
 
    @Inject
-   public Generator(final DataProvider dataProvider, final JsonWriter jsonWriter, final Logger logger, final AxonSpotter axonSpotter) {
-      this.dataProvider = dataProvider;
-      this.jsonWriter = jsonWriter;
+   public Generator(final Logger logger, final AxonSpotter axonSpotter, final EventBus eventBus, final DataProvider listener) {
       this.logger = logger;
       this.axonSpotter = axonSpotter;
+      this.eventBus = eventBus;
+      this.listener = listener;
    }
 
-   public void generateFile(final File inputRoot, final File outputPath) {
-      final AxonData axonData = axonSpotter.traverseFiles(inputRoot);
+   public void generateFile() {
+      eventBus.register(listener);
 
-      jsonWriter.write(outputPath, dataProvider.getData(axonData));
+      axonSpotter.traverseFiles();
 
       logger.info("done");
    }

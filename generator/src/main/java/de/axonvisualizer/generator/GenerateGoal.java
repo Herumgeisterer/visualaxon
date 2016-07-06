@@ -24,10 +24,10 @@ public class GenerateGoal extends AbstractMojo {
    private File outputFilePath;
 
    public void execute() throws MojoExecutionException {
-      Injector injector = Guice.createInjector(new MavenPluginModule(getLog()));
+      Injector injector = Guice.createInjector(new MavenPluginModule(getLog(), outputFilePath.getAbsolutePath()));
 
       final Generator generator = injector.getInstance(Generator.class);
 
-      generator.generateFile(rootDir, outputFilePath);
+      generator.generateFile();
    }
 }

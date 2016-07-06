@@ -4,5 +4,5 @@ import java.io.File;
 
 public interface JsonWriter {
 
-   void write(final File outputFile, final Object jsonString);
+   void write(final File outputFile, final Object object);
 }

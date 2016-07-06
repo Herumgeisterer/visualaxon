@@ -1,4 +1,4 @@
-package de.axonvisualizer.generator.data;
+package de.axonvisualizer.generator.event;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -18,8 +18,6 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class EventHandler {
-
-   private String eventType;
-   private String type;
+public class AggregateSpotted {
+   private String name;
 }

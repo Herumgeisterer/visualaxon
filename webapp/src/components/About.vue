@@ -21,7 +21,7 @@
       style: cytoscape.stylesheet()
               .selector('node')
               .css({
-//                'content': 'data(name)',
+                'content': 'data(name)',
                 'text-valign': 'center',
                 'color': 'white',
                 'text-outline-width': 2,

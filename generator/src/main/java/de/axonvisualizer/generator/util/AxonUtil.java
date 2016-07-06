@@ -23,7 +23,7 @@ public class AxonUtil {
    private static final Pattern BUILDER_PATTERN = Pattern.compile("(?<=apply\\()(.*)(?=.builder)");
    private static final Pattern CONSTRUCTOR_PATTERN = Pattern.compile("(?<=apply\\(new )(.*?)(?=\\()");
    private static final Pattern VARIABLE_PATTERN = Pattern.compile("(?<=apply\\()[^\\s()]+(?=[^()]*\\))");
-   private static final String EVENT_TYPE_FOR_VARIABLE_PATTERN = "(.*?)(?= %1s)";
+   private static final String EVENT_TYPE_FOR_VARIABLE_PATTERN = "(?<=\\w\\s)(.*?)(?= %1s)";
 
    public boolean isEventHandlingMethod(final String annotationName) {
       final boolean isEventHandler = annotationName.equals(EVENT_HANDLER_ANNOTATION_NAME);
