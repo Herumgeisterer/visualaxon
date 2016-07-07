@@ -1,6 +1,7 @@
 package de.axonvisualizer.generator;
 
 import de.axonvisualizer.generator.generator.Generator;
+import de.axonvisualizer.generator.init.guice.BaseModule;
 import de.axonvisualizer.generator.init.guice.MavenPluginModule;
 
 import java.io.File;
@@ -24,7 +25,7 @@ public class GenerateGoal extends AbstractMojo {
    private File outputFilePath;
 
    public void execute() throws MojoExecutionException {
-      Injector injector = Guice.createInjector(new MavenPluginModule(getLog(), outputFilePath.getAbsolutePath()));
+      Injector injector = Guice.createInjector(new BaseModule(rootDir.getAbsolutePath(), outputFilePath.getAbsolutePath()), new MavenPluginModule(getLog()));
 
       final Generator generator = injector.getInstance(Generator.class);
 

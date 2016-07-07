@@ -1,4 +1,4 @@
-package de.axonvisualizer;
+package de.axonvisualizer.config;
 
 import de.axonvisualizer.generator.json.provider.DataProvider;
 import de.axonvisualizer.generator.json.provider.cytoscape.CytoscapeListener;
@@ -17,7 +17,6 @@ public class TestModule extends AbstractModule {
    protected void configure() {
 
       bind(JsonWriter.class).to(GsonWriter.class);
-      //      bind(DataProvider.class).to(CytoscapeDataProvider.class);
       bind(Logger.class).to(Log4JLogger.class);
       bind(DataProvider.class).to(CytoscapeListener.class);
       bindConstant().annotatedWith(Names.named("outputPath"))

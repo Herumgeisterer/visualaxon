@@ -9,14 +9,14 @@ import com.google.inject.Inject;
 public class Generator {
 
    private Logger logger;
-   private AxonSpotter axonSpotter;
+   private JavaFileTraverser javaFileTraverser;
    private EventBus eventBus;
    private DataProvider listener;
 
    @Inject
-   public Generator(final Logger logger, final AxonSpotter axonSpotter, final EventBus eventBus, final DataProvider listener) {
+   public Generator(final Logger logger, final JavaFileTraverser javaFileTraverser, final EventBus eventBus, final DataProvider listener) {
       this.logger = logger;
-      this.axonSpotter = axonSpotter;
+      this.javaFileTraverser = javaFileTraverser;
       this.eventBus = eventBus;
       this.listener = listener;
    }
@@ -24,7 +24,7 @@ public class Generator {
    public void generateFile() {
       eventBus.register(listener);
 
-      axonSpotter.traverseFiles();
+      javaFileTraverser.traverseFiles();
 
       logger.info("done");
    }

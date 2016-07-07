@@ -3,10 +3,17 @@ package de.axonvisualizer.generator.generator;
 import de.axonvisualizer.generator.exception.AxonVisualizerException;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import org.jboss.forge.roaster.Roaster;
+import org.jboss.forge.roaster.model.JavaUnit;
+import org.jboss.forge.roaster.model.source.JavaClassSource;
+
+import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
@@ -15,6 +22,9 @@ public class JavaFileTraverser {
    @Inject
    @Named("inputRoot")
    private String inputRoot;
+
+   @Inject
+   private AxonSpotter javaFileParser;
 
    public void traverse(final TraverseCallback traverseCallback) {
       try {
@@ -26,6 +36,71 @@ public class JavaFileTraverser {
       } catch (IOException e) {
          throw new AxonVisualizerException(e.getMessage(), e.getCause());
       }
+   }
+
+   public void traverseFiles() {
+      traverse(path -> {
+         FileInputStream fileInputStream = null;
+         try {
+            fileInputStream = new FileInputStream(path.toFile());
+         } catch (FileNotFoundException e) {
+            throw new AxonVisualizerException(e.getMessage(), e.getCause());
+         }
+
+         final Optional<JavaClassSource> classSource = getClass(fileInputStream);
+
+         if (!isCandidate(classSource)) {
+            return;
+         }
+
+         final JavaClassSource klass = classSource.get();
+
+         javaFileParser.getAggregate(klass);
+
+         javaFileParser.getEventListener(klass);
+      });
+
+      traverse(path -> {
+         FileInputStream fileInputStream = null;
+         try {
+            fileInputStream = new FileInputStream(path.toFile());
+         } catch (FileNotFoundException e) {
+            throw new AxonVisualizerException(e.getMessage(), e.getCause());
+         }
+
+         final Optional<JavaClassSource> classSource = getClass(fileInputStream);
+
+         if (!isCandidate(classSource)) {
+            return;
+         }
+
+         final JavaClassSource klass = classSource.get();
+
+         javaFileParser.getEventListener(klass);
+      });
+   }
+
+   private Optional<JavaClassSource> getClass(final FileInputStream fileInputStream) {
+      JavaUnit unit = Roaster.parseUnit(fileInputStream);
+
+      if (!unit.getGoverningType()
+            .isClass()) {
+         return Optional.absent();
+      }
+
+      return Optional.of(unit.getGoverningType());
+   }
+
+   private boolean isCandidate(Optional<JavaClassSource> javaClassSource) {
+      if (!javaClassSource.isPresent()) {
+         return false;
+      }
+      if (javaClassSource.get()
+            .isAbstract()) {
+         return false;
+      }
+
+      return true;
    }
 
    public interface TraverseCallback {

@@ -1,6 +1,15 @@
-package de.axonvisualizer;
+package de.axonvisualizer.config;
 
-public abstract class TestData {
+import org.junit.Ignore;
+import org.junit.runner.RunWith;
+
+import com.carlosbecker.guice.GuiceModules;
+import com.carlosbecker.guice.GuiceTestRunner;
+
+@RunWith(GuiceTestRunner.class)
+@GuiceModules(TestModule.class)
+@Ignore
+public class AbstractTest {
 
    protected final String LOMBOK_BODY_WITH_SINGLE_APPLIED_EVENT = "validator.throwIfInvalid(command);\n"
          + "      apply(UsernameChanged.builder()\n"

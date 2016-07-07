@@ -1,5 +1,6 @@
 package de.axonvisualizer;
 
+import de.axonvisualizer.config.AbstractTest;
 import de.axonvisualizer.generator.util.AxonUtil;
 
 import static org.junit.Assert.assertEquals;
@@ -12,15 +13,10 @@ import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.JavaUnit;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-import com.carlosbecker.guice.GuiceModules;
-import com.carlosbecker.guice.GuiceTestRunner;
 import com.google.inject.Inject;
 
-@RunWith(GuiceTestRunner.class)
-@GuiceModules(TestModule.class)
-public class AxonUtilTests extends TestData {
+public class AxonUtilTest extends AbstractTest {
 
    @Inject
    private AxonUtil axonUtil;

@@ -7,13 +7,9 @@ import de.axonvisualizer.generator.event.EventListenerSpotted;
 import de.axonvisualizer.generator.exception.AxonVisualizerException;
 import de.axonvisualizer.generator.util.AxonUtil;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jboss.forge.roaster.Roaster;
-import org.jboss.forge.roaster.model.JavaUnit;
 import org.jboss.forge.roaster.model.Type;
 import org.jboss.forge.roaster.model.source.AnnotationSource;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
@@ -27,70 +23,14 @@ public class AxonSpotter {
 
    private final AxonUtil axonUtil;
    private final EventBus eventBus;
-   private final JavaFileTraverser javaFileTraverser;
 
    @Inject
-   public AxonSpotter(final AxonUtil axonUtil, final EventBus eventBus, final JavaFileTraverser javaFileTraverser) {
-      this.axonUtil = axonUtil;
+   public AxonSpotter(final EventBus eventBus, final AxonUtil axonUtil) {
       this.eventBus = eventBus;
-      this.javaFileTraverser = javaFileTraverser;
+      this.axonUtil = axonUtil;
    }
 
-   public void traverseFiles() {
-      javaFileTraverser.traverse(path -> {
-         FileInputStream fileInputStream = null;
-         try {
-            fileInputStream = new FileInputStream(path.toFile());
-         } catch (FileNotFoundException e) {
-            throw new AxonVisualizerException(e.getMessage(), e.getCause());
-         }
-
-         JavaUnit unit = Roaster.parseUnit(fileInputStream);
-
-         if (!unit.getGoverningType()
-               .isClass()) {
-            return;
-         }
-
-         JavaClassSource myClass = unit.getGoverningType();
-
-         if (myClass.isAbstract()) {
-            return;
-         }
-
-         if (axonUtil.isAggreagte(myClass)) {
-            getAggregate(myClass);
-         }
-
-         getEventListener(myClass);
-      });
-
-      javaFileTraverser.traverse(path -> {
-         FileInputStream fileInputStream = null;
-         try {
-            fileInputStream = new FileInputStream(path.toFile());
-         } catch (FileNotFoundException e) {
-            throw new AxonVisualizerException(e.getMessage(), e.getCause());
-         }
-
-         JavaUnit unit = Roaster.parseUnit(fileInputStream);
-
-         if (!unit.getGoverningType()
-               .isClass()) {
-            return;
-         }
-
-         JavaClassSource myClass = unit.getGoverningType();
-
-         if (myClass.isAbstract()) {
-            return;
-         }
-
-         getEventListener(myClass);
-      });
-   }
-
-   private void getEventListener(final JavaClassSource klass) {
+   public void getEventListener(final JavaClassSource klass) {
 
       final List<MethodSource<JavaClassSource>> methods = klass.getMethods();
       final List<MethodSource<JavaClassSource>> eventHandlerMethods = new ArrayList<>();
@@ -119,7 +59,7 @@ public class AxonSpotter {
 
    }
 
-   private void getEventHandler(final MethodSource<JavaClassSource> method, final String listenerName) {
+   public void getEventHandler(final MethodSource<JavaClassSource> method, final String listenerName) {
       final String eventTypeName = method.getParameters()
             .get(0)
             .getType()
@@ -142,7 +82,12 @@ public class AxonSpotter {
             .build());
    }
 
-   private void getAggregate(final JavaClassSource myClass) {
+   public void getAggregate(final JavaClassSource myClass) {
+
+      if (!axonUtil.isAggreagte(myClass)) {
+         return;
+      }
+
       final String aggregateName = myClass.getName();
 
       eventBus.post(AggregateSpotted.builder()
