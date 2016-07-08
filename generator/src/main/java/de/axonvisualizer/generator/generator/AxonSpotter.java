@@ -5,10 +5,12 @@ import de.axonvisualizer.generator.event.CommandHandlerSpotted;
 import de.axonvisualizer.generator.event.EventHandlerSpotted;
 import de.axonvisualizer.generator.event.EventListenerSpotted;
 import de.axonvisualizer.generator.exception.AxonVisualizerException;
+import de.axonvisualizer.generator.logging.Logger;
 import de.axonvisualizer.generator.util.AxonUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.jboss.forge.roaster.model.Type;
 import org.jboss.forge.roaster.model.source.AnnotationSource;
@@ -21,16 +23,15 @@ import com.google.inject.Inject;
 
 public class AxonSpotter {
 
-   private final AxonUtil axonUtil;
-   private final EventBus eventBus;
-
    @Inject
-   public AxonSpotter(final EventBus eventBus, final AxonUtil axonUtil) {
-      this.eventBus = eventBus;
-      this.axonUtil = axonUtil;
-   }
+   private AxonUtil axonUtil;
+   @Inject
+   private EventBus eventBus;
+   @Inject
+   private Logger logger;
 
    public void getEventListener(final JavaClassSource klass) {
+      logger.info("Looking for eventlistener in class: " + klass.getQualifiedName());
 
       final List<MethodSource<JavaClassSource>> methods = klass.getMethods();
       final List<MethodSource<JavaClassSource>> eventHandlerMethods = new ArrayList<>();
@@ -49,12 +50,20 @@ public class AxonSpotter {
          return;
       }
 
+      logger.info("Spotted " + klass.getQualifiedName() + " as eventlistener");
       eventBus.post(EventListenerSpotted.builder()
-            .name(klass.getName())
+            .name(klass.getQualifiedName())
             .build());
 
+      final List<String> eventTypes = eventHandlerMethods.stream()
+            .map(javaClassSourceMethodSource -> javaClassSourceMethodSource.getParameters()
+                  .get(0)
+                  .getType()
+                  .getName())
+            .collect(Collectors.toList());
+      logger.info("Found " + eventHandlerMethods.size() + " eventhandler in listener " + klass.getQualifiedName() + " for events: " + eventTypes);
       for (MethodSource<JavaClassSource> method : eventHandlerMethods) {
-         getEventHandler(method, klass.getName());
+         getEventHandler(method, klass.getQualifiedName());
       }
 
    }
@@ -82,19 +91,21 @@ public class AxonSpotter {
             .build());
    }
 
-   public void getAggregate(final JavaClassSource myClass) {
+   public void getAggregate(final JavaClassSource klass) {
+      logger.info("Looking for Aggregate in class " + klass.getQualifiedName());
 
-      if (!axonUtil.isAggreagte(myClass)) {
+      if (!axonUtil.isAggreagte(klass)) {
          return;
       }
 
-      final String aggregateName = myClass.getName();
+      final String aggregateName = klass.getQualifiedName();
 
+      logger.info("Found aggregate in class " + klass.getQualifiedName());
       eventBus.post(AggregateSpotted.builder()
             .name(aggregateName)
             .build());
 
-      final List<MethodSource<JavaClassSource>> methods = myClass.getMethods();
+      final List<MethodSource<JavaClassSource>> methods = klass.getMethods();
 
       for (MethodSource<JavaClassSource> method : methods) {
          if (!axonUtil.isCommandHandler(method)) {
@@ -108,6 +119,7 @@ public class AxonSpotter {
 
          final List<String> appliedEvents = axonUtil.getAppliedEvents(method.getBody());
 
+         logger.info("Found commandhandler for command " + commandType.getName() + " in class " + klass.getQualifiedName());
          eventBus.post(CommandHandlerSpotted.builder()
                .command(commandType.getName())
                .aggregate(aggregateName)

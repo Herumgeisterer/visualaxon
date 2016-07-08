@@ -56,8 +56,6 @@ public class JavaFileTraverser {
          final JavaClassSource klass = classSource.get();
 
          javaFileParser.getAggregate(klass);
-
-         javaFileParser.getEventListener(klass);
       });
 
       traverse(path -> {

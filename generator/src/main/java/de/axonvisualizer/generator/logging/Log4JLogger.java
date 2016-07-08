@@ -1,8 +1,10 @@
 package de.axonvisualizer.generator.logging;
 
+import de.axonvisualizer.generator.AxonvisualizerApplication;
+
 public class Log4JLogger implements Logger {
 
-   org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(Log4JLogger.class);
+   org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(AxonvisualizerApplication.class);
 
    @Override
    public void info(final String message) {
