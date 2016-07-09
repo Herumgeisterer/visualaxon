@@ -22,9 +22,10 @@
             <div class="col s12 m4">
               <div class="icon-block">
                 <h2 class="center light-blue-text"><i class="material-icons">code</i></h2>
-                <h5 class="center"><a href="http://www.axonframework.org/" target="_blank">Axonframework</a></h5>
+                <h5 class="center">Axonframework</h5>
 
-                <p class="light">The axonframework helps you build applications based on the CQRS principle and eventsourcing pattern</p>
+                <p class="light">The axonframework helps you build applications based on the CQRS principle and eventsourcing pattern. More information on the framework can be found <a
+                        href="http://www.axonframework.org/" target="_blank">here</a>.</p>
               </div>
             </div>
 
@@ -42,20 +43,10 @@
             <div class="col s12 m4">
               <div class="icon-block">
                 <h2 class="center light-blue-text"><i class="material-icons">info_outline</i></h2>
-                <h5 class="center">???</h5>
+                <h5 class="center">Easy to use</h5>
 
-                <p class="light"></p>
-              </div>
-            </div>
-
-            <div class="col s12">
-              <div class="icon-block">
-                <h2 class="center light-blue-text"><i class="material-icons">info</i></h2>
-                <h5 class="center">Getting started</h5>
-
-                <p class="center">Include the maven plugin in your project</p>
-                <p class="center">run mvn axonviszualizer:generate</p>
-                <p class="center">Come back to this page and load the generated json file</p>
+                <p class="light">This tool is available as maven plugin or standalone jar executable. Read the Readme on <a href="https://github.com/Herumgeisterer/axonvisualizer" target="_blank">github.com</a>
+                                 to learn how to use this tool.</p>
               </div>
             </div>
           </div>
@@ -83,11 +74,6 @@
   import $ from 'jquery';
 
   export default {
-    data() {
-      return {
-        title: 'Home!'
-      }
-    },
     methods: {
       onClick: function () {
         $('#file-input').click();

@@ -7,12 +7,19 @@
       </ul>
     </nav>
 
+    <octocat></octocat>
+
     <router-view transition="fade" transition-mode="out-in" :nodes.sync="nodes"></router-view>
   </div>
 </template>
 
 <script>
+  import Octocat from './components/Octocat.vue';
+
   export default {
+    components: {
+      Octocat
+    },
     replace: false
   }
 </script>
