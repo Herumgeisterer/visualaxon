@@ -3,7 +3,7 @@ import Router from 'vue-router'
 
 import App from './App.vue'
 import Home from './components/Home.vue'
-import About from './components/About.vue'
+import Example from './components/Example.vue'
 
 Vue.use(Router)
 
@@ -14,9 +14,9 @@ router.map({
     component: Home,
     name: 'home'
   },
-  'about': {
-    component: About,
-    name: 'about'
+  'example': {
+    component: Example,
+    name: 'example'
   }
 })
 

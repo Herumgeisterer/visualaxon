@@ -3,13 +3,11 @@
     <nav class="blue-grey lighten-1" role="navigation">
       <ul>
         <li><a v-link="{ name: 'home', exact: true }">Home</a></li>
-        <li><a v-link="{ name: 'about' }">About</a></li>
+        <li><a v-link="{ name: 'example' }">Example</a></li>
       </ul>
     </nav>
 
-    <router-view transition="fade" transition-mode="out-in"></router-view>
-
-
+    <router-view transition="fade" transition-mode="out-in" :nodes.sync="nodes"></router-view>
   </div>
 </template>
 
