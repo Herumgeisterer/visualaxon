@@ -45,7 +45,7 @@ e.g.
 
 `java -jar axonvisualizer.java /Development/myproject /tmp/output.json`
 
-After you generated the .json file, go to the [webapp](http://github.com/) and load the .json file to see the graph.
+After you generated the .json file, go to the [website](https://herumgeisterer.github.io/axonvisualizer/) and load the .json file to see the graph.
 
 ## Features
 
