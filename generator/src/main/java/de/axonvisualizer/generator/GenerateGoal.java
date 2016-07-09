@@ -15,7 +15,7 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-@Mojo(name = "generate", requiresDependencyCollection = ResolutionScope.COMPILE)
+@Mojo(name = "generate", requiresDependencyCollection = ResolutionScope.COMPILE, aggregator = true)
 public class GenerateGoal extends AbstractMojo {
 
    @Parameter(defaultValue = "${project.basedir}", property = "baseDir", required = true)

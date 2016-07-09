@@ -63,7 +63,7 @@
       }, // on layoutready
       stop: function () {
       }, // on layoutstop
-      randomize: false,
+      randomize: true,
       nodeSpacing: function (node) {
         if (node.isParent()) {
           return 30;
