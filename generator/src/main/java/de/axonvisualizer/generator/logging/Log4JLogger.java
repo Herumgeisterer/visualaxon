@@ -4,7 +4,7 @@ import de.axonvisualizer.generator.AxonvisualizerApplication;
 
 public class Log4JLogger implements Logger {
 
-   org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(AxonvisualizerApplication.class);
+   private final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(AxonvisualizerApplication.class);
 
    @Override
    public void info(final String message) {
@@ -24,5 +24,10 @@ public class Log4JLogger implements Logger {
    @Override
    public void error(final Throwable error) {
       logger.error(error);
+   }
+
+   @Override
+   public void debug(final String message) {
+      logger.debug(message);
    }
 }

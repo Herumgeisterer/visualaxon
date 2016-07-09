@@ -31,7 +31,7 @@ public class AxonSpotter {
    private Logger logger;
 
    public void getEventListener(final JavaClassSource klass) {
-      logger.info("Looking for eventlistener in class: " + klass.getQualifiedName());
+      logger.debug("Looking for eventlistener in class: " + klass.getQualifiedName());
 
       final List<MethodSource<JavaClassSource>> methods = klass.getMethods();
       final List<MethodSource<JavaClassSource>> eventHandlerMethods = new ArrayList<>();
@@ -50,7 +50,7 @@ public class AxonSpotter {
          return;
       }
 
-      logger.info("Spotted " + klass.getQualifiedName() + " as eventlistener");
+      logger.info("Found " + klass.getQualifiedName() + " as eventlistener");
       eventBus.post(EventListenerSpotted.builder()
             .name(klass.getQualifiedName())
             .build());
@@ -61,14 +61,14 @@ public class AxonSpotter {
                   .getType()
                   .getName())
             .collect(Collectors.toList());
-      logger.info("Found " + eventHandlerMethods.size() + " eventhandler in listener " + klass.getQualifiedName() + " for events: " + eventTypes);
+      logger.debug("Found " + eventHandlerMethods.size() + " eventhandler in listener " + klass.getQualifiedName() + " for events: " + eventTypes);
       for (MethodSource<JavaClassSource> method : eventHandlerMethods) {
          getEventHandler(method, klass.getQualifiedName());
       }
 
    }
 
-   public void getEventHandler(final MethodSource<JavaClassSource> method, final String listenerName) {
+   private void getEventHandler(final MethodSource<JavaClassSource> method, final String listenerName) {
       final String eventTypeName = method.getParameters()
             .get(0)
             .getType()
@@ -92,7 +92,7 @@ public class AxonSpotter {
    }
 
    public void getAggregate(final JavaClassSource klass) {
-      logger.info("Looking for Aggregate in class " + klass.getQualifiedName());
+      logger.debug("Looking for Aggregate in class " + klass.getQualifiedName());
 
       if (!axonUtil.isAggreagte(klass)) {
          return;

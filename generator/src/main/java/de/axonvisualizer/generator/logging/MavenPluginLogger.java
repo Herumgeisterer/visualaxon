@@ -6,7 +6,7 @@ import com.google.inject.Inject;
 
 public class MavenPluginLogger implements Logger {
 
-   private Log log;
+   private final Log log;
 
    @Inject
    public MavenPluginLogger(Log log) {
@@ -31,5 +31,10 @@ public class MavenPluginLogger implements Logger {
    @Override
    public void error(final Throwable error) {
       log.error(error);
+   }
+
+   @Override
+   public void debug(final String message) {
+      log.debug(message);
    }
 }

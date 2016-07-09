@@ -90,15 +90,9 @@ public class JavaFileTraverser {
    }
 
    private boolean isCandidate(Optional<JavaClassSource> javaClassSource) {
-      if (!javaClassSource.isPresent()) {
-         return false;
-      }
-      if (javaClassSource.get()
-            .isAbstract()) {
-         return false;
-      }
+      return javaClassSource.isPresent() && !javaClassSource.get()
+            .isAbstract();
 
-      return true;
    }
 
    public interface TraverseCallback {

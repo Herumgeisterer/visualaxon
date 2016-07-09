@@ -13,12 +13,12 @@ import org.jboss.forge.roaster.model.source.MethodSource;
 
 public class AxonUtil {
 
-   public static final String EVENT_HANDLER_ANNOTATION_NAME = "EventHandler";
-   public static final String ABSTRACT_ANNOTATED_AGGREGATE_ROOT = "AbstractAnnotatedAggregateRoot";
-   public static final String SAGA_EVENT_HANDLER_NAME = "SagaEventHandler";
-   public static final String EVENT_SOURCING_HANDLER_NAME = "EventSourcingHandler";
-   public static final String ABSTRACT_ANNOTATED_ENTITY = "AbstractAnnotatedEntity";
-   public static final String COMMAND_HANDLER = "CommandHandler";
+   private static final String EVENT_HANDLER_ANNOTATION_NAME = "EventHandler";
+   private static final String ABSTRACT_ANNOTATED_AGGREGATE_ROOT = "AbstractAnnotatedAggregateRoot";
+   private static final String SAGA_EVENT_HANDLER_NAME = "SagaEventHandler";
+   private static final String EVENT_SOURCING_HANDLER_NAME = "EventSourcingHandler";
+   private static final String ABSTRACT_ANNOTATED_ENTITY = "AbstractAnnotatedEntity";
+   private static final String COMMAND_HANDLER = "CommandHandler";
 
    private static final Pattern BUILDER_PATTERN = Pattern.compile("(?<=apply\\()(.*)(?=.builder)");
    private static final Pattern CONSTRUCTOR_PATTERN = Pattern.compile("(?<=apply\\(new )(.*?)(?=\\()");

@@ -28,12 +28,7 @@ public class JavaFileTraverserTest extends AbstractTest {
    @Test
    public void shouldNotVisitFileTwice() throws Exception {
       Set<Path> seenFiles = new HashSet<>();
-      javaFileTraverser.traverse(new JavaFileTraverser.TraverseCallback() {
-         @Override
-         public void onFile(final Path path) {
-            assertTrue(path.getFileName()
-                  .toString() + " was already vistited", seenFiles.add(path.toAbsolutePath()));
-         }
-      });
+      javaFileTraverser.traverse(path -> assertTrue(path.getFileName()
+            .toString() + " was already vistited", seenFiles.add(path.toAbsolutePath())));
    }
 }

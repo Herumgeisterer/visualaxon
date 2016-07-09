@@ -10,7 +10,7 @@ import com.google.inject.Provides;
 
 public class MavenPluginModule extends AbstractModule {
 
-   private Log log;
+   private final Log log;
 
    @Override
    protected void configure() {

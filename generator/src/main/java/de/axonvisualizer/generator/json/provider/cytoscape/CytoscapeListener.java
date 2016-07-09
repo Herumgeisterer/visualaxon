@@ -21,8 +21,8 @@ import com.google.inject.name.Named;
 
 public class CytoscapeListener implements DataProvider {
 
-   private List<Node> nodes = new ArrayList<>();
-   private Map<String, String> eventToCommandHandlerId = new HashMap<>();
+   private final List<Node> nodes = new ArrayList<>();
+   private final Map<String, String> eventToCommandHandlerId = new HashMap<>();
 
    @Inject
    @Named("outputPath")
