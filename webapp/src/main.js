@@ -4,10 +4,11 @@ import Router from 'vue-router'
 import App from './App.vue'
 import Home from './components/Home.vue'
 import Example from './components/Example.vue'
+import View from './components/View.vue';
 
-Vue.use(Router)
+Vue.use(Router);
 
-const router = new Router()
+const router = new Router();
 
 router.map({
   '/': {
@@ -17,7 +18,13 @@ router.map({
   'example': {
     component: Example,
     name: 'example'
+  },
+  'view': {
+    component: View,
+    name: 'view'
   }
-})
+});
 
-router.start(App, document.body)
+router.start(App, document.body);
+
+export default router;
