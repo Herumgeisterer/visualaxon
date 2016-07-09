@@ -6,7 +6,14 @@ More info on the axonframework is found on [axonframework.org](http://axonframew
 
 ## Usage
 
-Include plugin in your projects root `pom.xml`
+You have two options.
+
+### Build it yourself
+
+* Clone this repository
+* go into `cd axonvisualizer/generator/``
+* run `mvn clean install`
+* Include plugin in your projects root `pom.xml`
 ```xml
 <plugin>
   <groupId>de.axonvisualizer</groupId>
@@ -25,14 +32,18 @@ Include plugin in your projects root `pom.xml`
   </executions>
 </plugin>
 ```
-and run
-`mvn axonvisualizer:generate`
 
-<b>OR</b>
+* run `mvn axonvisualizer:generate`
 
-Download the jar and execute
+### Use as executable jar
+
+Download the the latest jar release and run
 
 `java -jar axonvisualizer.java <inputroot> <outputfilename>`
+
+e.g.
+
+`java -jar axonvisualizer.java /Development/myproject /tmp/output.json`
 
 After you generated the .json file, go to the [webapp](http://github.com/) and load the .json file to see the graph.
 
