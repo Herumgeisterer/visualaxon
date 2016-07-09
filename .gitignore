@@ -43,7 +43,7 @@ target
 
 node_modules
 bower_components
-dist
+**/dist/build.js
 main.css
 .sass-cache
 main.css.map
