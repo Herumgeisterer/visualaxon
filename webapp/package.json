@@ -1,6 +1,6 @@
 {
-  "name": "axonvisualizer",
-  "description": "Webapp for axonvisualizer",
+  "name": "VisualAxon",
+  "description": "Webapp for VisualAxon",
   "author": "Sven <sk@qyotta.de>",
   "private": true,
   "scripts": {

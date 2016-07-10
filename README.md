@@ -1,4 +1,4 @@
-# Axonvisualizer
+# VisualAxon
 
 This tool allows you to visualize an axonframework based application.
 It shows you for every given commandhandler (methods annotated with @CommandHandler) which events it applies and where these events are handled (methods annotated with @SagaEventHandler, @EventHandler, @EventSourcingHandler). The result is a graph which shows commandhandler and eventhandler as nodes, grouped by aggregates and eventlistener (eventhandling classes).
@@ -10,42 +10,51 @@ First you need to execute the tool to generate a json file containing all releva
 
 ### Build it yourself
 
-* Clone this repository `git clone git@github.com:Herumgeisterer/axonvisualizer.git`
-* `cd axonvisualizer/generator/`
+* Clone this repository `git clone git@github.com:Herumgeisterer/visualaxon.git`
+* `cd visualaxon`
 * run `mvn clean install`
 * Include the maven plugin in your projects root `pom.xml`
 ```xml
 <plugin>
-  <groupId>de.axonvisualizer</groupId>
-  <artifactId>axonvisualizer-maven-plugin</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <executions>
-    <execution>
-      <phase>compile</phase>
-      <goals>
-        <goal>generate</goal>
-      </goals>
-      <configuration>
-        <outputFilePath>${project.basedir}/output.json</outputFilePath>
-      </configuration>
-    </execution>
-  </executions>
+   <groupId>de.visualaxon</groupId>
+   <artifactId>visualaxon-maven-plugin</artifactId>
+   <version>0.0.1-SNAPSHOT</version>
+   <executions>
+      <execution>
+         <phase>compile</phase>
+         <goals>
+            <goal>generate</goal>
+         </goals>
+         <configuration>
+            <!-- optional configuration -->
+         </configuration>
+      </execution>
+   </executions>
 </plugin>
 ```
 
-* run `mvn de.axonvisualizer:axonvisualizer-maven-plugin:generate`
+* run `mvn de.visualaxon:visualaxon-maven-plugin:generate`
+
+###### Options
+
+```xml
+<configuration>
+  <inputRoot>/some/path/myproject</inputRoot> <!-- default: ${project.basedir} -->
+  <outputFilePath>/another/path/output.json</outputFilePath> <!-- default: ${project.basedir}/output.json -->
+</configuration>
+```
 
 ### Use as executable jar
 
 Download the the latest jar release and run
 
-`java -jar axonvisualizer-<version>.jar <inputroot> <outputfilename>`
+`java -jar visualaxon-<version>.jar <inputroot> <outputfilename>`
 
 e.g.
 
-`java -jar axonvisualizer-0.0.1.jar /Development/myproject /tmp/output.json`
+`java -jar visualaxon-0.1.0.jar /Development/myproject /tmp/output.json`
 
-After you generated the json file, go to the [website](https://herumgeisterer.github.io/axonvisualizer/) and load the json file to see the graph.
+After you generated the json file, go to the [website](https://herumgeisterer.github.io/visualaxon/) and load the json file to see the graph.
 
 
 ## Example
@@ -69,4 +78,4 @@ After you generated the json file, go to the [website](https://herumgeisterer.gi
 See the [LICENSE](LICENSE.md) file for license rights and limitations (MIT).
 
 
-[example]: https://github.com/herumgeisterer/axonvisualizer/raw/master/raw/example.png "Example image"
+[example]: https://github.com/herumgeisterer/visualaxon/raw/master/raw/example.png "Example image"

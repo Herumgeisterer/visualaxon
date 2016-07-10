@@ -4,7 +4,7 @@
     <div class="section no-pad-bot" id="index-banner">
       <div class="container">
         <br><br>
-        <h1 class="header center orange-text">Axonvisualizer</h1>
+        <h1 class="header center orange-text">VisualAxon</h1>
         <div class="row center">
           <h5 class="header col s12 light">A maven plugin which helps you visualize your Axonframework based application</h5>
         </div>
@@ -45,7 +45,7 @@
                 <h2 class="center light-blue-text"><i class="material-icons">info_outline</i></h2>
                 <h5 class="center">Easy to use</h5>
 
-                <p class="light">This tool is available as maven plugin or standalone jar executable. Read the Readme on <a href="https://github.com/Herumgeisterer/axonvisualizer" target="_blank">github.com</a>
+                <p class="light">This tool is available as maven plugin or standalone jar executable. Read the Readme on <a href="https://github.com/Herumgeisterer/visualaxon" target="_blank">github.com</a>
                                  to learn how to use this tool.</p>
               </div>
             </div>
