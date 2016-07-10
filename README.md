@@ -1,7 +1,7 @@
 # Axonvisualizer
 
 This tool allows you to visualize an axonframework based application.
-It shows you for every given commandhandler which events it applies to the eventbus and where these events are handled.
+It shows you for every given commandhandler (methods annotated with @CommandHandler) which events it applies and where these events are handled (methods annotated with @SagaEventHandler, @EventHandler, @EventSourcingHandler). The result is a graph which shows commandhandler and eventhandler as nodes, grouped by aggregates and eventlistener (eventhandling classes).
 More info on the axonframework is found on [axonframework.org](http://axonframework.org/)
 
 ## Some facts
@@ -12,12 +12,12 @@ More info on the axonframework is found on [axonframework.org](http://axonframew
 
 ## Usage
 
-You have two options.
+First you need to execute the tool to generate a json file containing all relevant data. To do this, you have two options:
 
 ### Build it yourself
 
-* Clone this repository
-* go into the generate directory `cd axonvisualizer/generator/`
+* Clone this repository `git clone git@github.com:Herumgeisterer/axonvisualizer.git`
+* `cd axonvisualizer/generator/`
 * run `mvn clean install`
 * Include the maven plugin in your projects root `pom.xml`
 ```xml
@@ -51,7 +51,7 @@ e.g.
 
 `java -jar axonvisualizer-0.0.1.jar /Development/myproject /tmp/output.json`
 
-After you generated the .json file, go to the [website](https://herumgeisterer.github.io/axonvisualizer/) and load the .json file to see the graph.
+After you generated the json file, go to the [website](https://herumgeisterer.github.io/axonvisualizer/) and load the json file to see the graph.
 
 
 ## Example
@@ -61,7 +61,7 @@ After you generated the .json file, go to the [website](https://herumgeisterer.g
 
 ## Limits
 
-* It doesn't show where a command is comming from
+* It doesn't show where a command is coming from (but planned for a future release)
 * Your code needs to be properly formatted. Most source file parsing is done by the presence of annoations and class names, but some parts are done by manually parsing the java source code
 
 ## License
@@ -70,4 +70,3 @@ See the [LICENSE](LICENSE.md) file for license rights and limitations (MIT).
 
 
 [example]: https://github.com/herumgeisterer/axonvisualizer/raw/master/raw/example.png "Example image"
-
