@@ -64,5 +64,10 @@ After you generated the .json file, go to the [website](https://herumgeisterer.g
 * It doesn't show where a command is comming from
 * Your code needs to be properly formatted. Most source file parsing is done by the presence of annoations and class names, but some parts are done by manually parsing the java source code
 
+## License
 
-[example]: https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Example image"
+See the [LICENSE](LICENSE.md) file for license rights and limitations (MIT).
+
+
+[example]: https://github.com/herumgeisterer/axonvisualizer/raw/master/raw/example.png "Example image"
+
