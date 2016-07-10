@@ -4,12 +4,6 @@ This tool allows you to visualize an axonframework based application.
 It shows you for every given commandhandler (methods annotated with @CommandHandler) which events it applies and where these events are handled (methods annotated with @SagaEventHandler, @EventHandler, @EventSourcingHandler). The result is a graph which shows commandhandler and eventhandler as nodes, grouped by aggregates and eventlistener (eventhandling classes).
 More info on the axonframework is found on [axonframework.org](http://axonframework.org/)
 
-## Some facts
-* Builder-Pattern-Support (e.g. lombok)
-* Based and tested on axonframework version 2.4.4
-* (PDF and image export (coming soon))
-* Support for eventhandler and sagaeventhandler
-
 ## Usage
 
 First you need to execute the tool to generate a json file containing all relevant data. To do this, you have two options:
@@ -58,10 +52,16 @@ After you generated the json file, go to the [website](https://herumgeisterer.gi
 
 ![example image][example]
 
+## Some facts
+* Builder-Pattern-Support (e.g. lombok)
+* Based and tested on axonframework version 2.4.4
+* (PDF and image export (coming soon))
+* Support for eventhandler and sagaeventhandler
 
 ## Limits
 
 * It doesn't show where a command is coming from (but planned for a future release)
+* For very large projects the graph can be very cluttered
 * Your code needs to be properly formatted. Most source file parsing is done by the presence of annoations and class names, but some parts are done by manually parsing the java source code
 
 ## License
