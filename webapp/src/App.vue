@@ -9,7 +9,7 @@
 
     <octocat></octocat>
 
-    <router-view transition="fade" transition-mode="out-in" :nodes.sync="nodes"></router-view>
+    <router-view transition="fade" transition-mode="out-in"></router-view>
   </div>
 </template>
 
